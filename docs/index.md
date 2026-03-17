@@ -1,6 +1,8 @@
 # 🏠 Добре дошли в AI Lab & 3D Studio
 
-## 🗺️ Последна активност (Глобална Пътна Карта)
+<input type="text" id="roadmap-search" placeholder="🔍 Търси в историята... ">
+
+## 🗺️ Последна активност
 
 <div class="roadmap-entry">
     <span class="date">2026-03-17</span>

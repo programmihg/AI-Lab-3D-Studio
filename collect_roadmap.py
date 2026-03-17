@@ -8,49 +8,74 @@ def collect_roadmaps():
 
     all_entries = []
     
-    print(f"🔍 Търсене в: {docs_dir}")
+    # Речник за автоматични икони
+    icons = {
+        "python": "🐍 ",
+        "github": "🐙 ",
+        "git": "🗂️ ",
+        "3d": "📦 ",
+        "blender": "🎨 ",
+        "ai": "🤖 ",
+        "fix": "🛠️ "
+    }
+
+    if not os.path.exists(docs_dir): return
 
     for root, dirs, files in os.walk(docs_dir):
         for file in files:
-            if file == 'roadmap.md':
-                full_path = os.path.join(root, file)
-                # Пропускаме главния index.md
-                if "index.md" in full_path: continue
-                
-                print(f"📂 Обработка на: {full_path}")
-                
-                with open(full_path, 'r', encoding='utf-8') as f:
+            if file == 'roadmap.md' and "index.md" not in root:
+                with open(os.path.join(root, file), 'r', encoding='utf-8') as f:
                     content = f.read()
-                    # Намираме всички блокове roadmap-entry
                     entries = re.findall(r'<div class="roadmap-entry">.*?</div>\s*</div>', content, re.DOTALL)
                     if not entries:
                         entries = re.findall(r'<div class="roadmap-entry">.*?</div>', content, re.DOTALL)
 
                     for entry in entries:
                         clean_entry = entry.strip()
-                        # АВТОМАТИЧЕН ФИКС ЗА ЗАТВАРЯЩИ ТАГОВЕ
-                        open_divs = clean_entry.count('<div')
-                        close_divs = clean_entry.count('</div')
-                        while open_divs > close_divs:
-                            clean_entry += '\n</div>'
-                            close_divs += 1
+                        
+                        # Автоматично добавяне на икона пред заглавието
+                        for key, icon in icons.items():
+                            if key in clean_entry.lower():
+                                clean_entry = clean_entry.replace('class="milestone">', f'class="milestone">{icon}')
+                                break # Слагаме само първата намерена икона
                         
                         all_entries.append(clean_entry)
 
-    # Сортираме записите (най-новите най-отгоре)
     all_entries.sort(reverse=True)
 
     with open(index_file, 'w', encoding='utf-8') as f:
-        f.write("# 🏠 Добре дошли в AI Lab & 3D Studio\n\n")
-        f.write("## 🗺️ Последна активност (Глобална Пътна Карта)\n\n")
+        f.write("# 🏠 AI Lab & 3D Studio Dashboard\n\n")
+        # Добавяме търсачката в началото
+        f.write('<input type="text" id="roadmap-search" placeholder="🔍 Търси в историята (напр. python, 3d, git)..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #444; background:#252538; color:white; margin-bottom:20px;">\n\n')
+        f.write("## 🗺️ Пътна Карта\n\n")
+        f.write('<div id="roadmap-container">\n\n')
+        for entry in all_entries:
+            f.write(entry + "\n\n")
+        f.write('</div>\n\n')
         
-        if not all_entries:
-            f.write("*Все още няма намерени записи в локалните roadmap.md файлове.*\n")
-        else:
-            for entry in all_entries:
-                f.write(entry + "\n\n")
-            
-    print(f"✅ Готово! Индексирани записи: {len(all_entries)}")
+        # Добавяме JavaScript логиката за филтриране и оцветяване
+        f.write("""
+<script>
+const searchInput = document.getElementById('roadmap-search');
+const entries = document.querySelectorAll('.roadmap-entry');
+
+searchInput.addEventListener('input', function() {
+    const term = this.value.toLowerCase();
+    entries.forEach(entry => {
+        const text = entry.innerText.toLowerCase();
+        entry.style.display = text.includes(term) ? 'block' : 'none';
+    });
+});
+
+// Динамично оцветяване
+entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (text.includes('python')) entry.style.borderLeft = '5px solid #3776ab';
+    else if (text.includes('github') || text.includes('git')) entry.style.borderLeft = '5px solid #6e5494';
+    else if (text.includes('3d')) entry.style.borderLeft = '5px solid #ff9900';
+});
+</script>
+""")
 
 if __name__ == "__main__":
     collect_roadmaps()

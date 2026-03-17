@@ -206,3 +206,57 @@
     clear: both;
     margin-bottom: 20px !important;
 }
+
+/* Основен контейнер за картата */
+.roadmap-entry {
+    border-left: 5px solid #00d2ff; /* Стандартен цвят */
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+.roadmap-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Цветове според категорията (ще ги добавим чрез JS) */
+.roadmap-entry.category-github { border-left-color: #6e5494; }
+.roadmap-entry.category-python { border-left-color: #3776ab; }
+.roadmap-entry.category-3d { border-left-color: #ff9900; }
+
+/* Стил за търсачката */
+#roadmap-search {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 30px;
+    border-radius: 25px;
+    border: 1px solid #444;
+    background: #252538;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+}
+
+#roadmap-search:focus {
+    border-color: #00d2ff;
+    box-shadow: 0 0 8px rgba(0, 210, 255, 0.5);
+}
+
+.roadmap-entry {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+}
+
+.roadmap-entry:hover {
+    transform: scale(1.02);
+    background: #2a2a3d !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+#roadmap-search:focus {
+    border-color: #00d2ff !important;
+}
