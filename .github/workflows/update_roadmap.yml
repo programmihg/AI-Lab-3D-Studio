@@ -3,15 +3,17 @@ name: Update Global Roadmap
 on:
   push:
     branches:
-      - main  # Скриптът ще се пуска при всеки push в main
-  workflow_dispatch: # Позволява ти да го пуснеш и ръчно от бутон в GitHub
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: # Добавяме изрични права тук
+      contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Използваме по-нова версия v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
