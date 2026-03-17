@@ -1,0 +1,44 @@
+site_name: AI Lab & 3D Studio
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: cyan
+  icon:
+    logo: material/robot-outline
+    # logo: material/cube-outline # Избираме куб, подходящ за 3D Studio
+    # logo: logo.png # За да ползваш твое картинно лого, поставено в docs/assets/logo.png
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - header.autohide
+
+extra_javascript:
+  - assets/javascripts/flashcards.js
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+nav:
+  - 🏠 Начало и Пътна карта: index.md
+  - 🐙 GitHub & Версии:
+      - Команди: github/commands.md
+      - Локален Roadmap: github/roadmap.md
+  - 🧠 Система за преговор:
+      - Web: review/web.md
+      - Programming: review/programming.md
+      - Networking: review/networking.md
+      - 3D Design: review/3d-design.md
+  - 🖥️ AI Сървър & Lab:
+      - Система за флашкарти: ai-server/flashcards-guide.md
+      - AI Двигател (Models & Cursor): ai-server/ai-engine.md
+      - Локален Roadmap: ai-server/roadmap.md
+  - 🌐 Мрежи (Networking):
+      - Команди: networking/commands.md
+      - IPv4 основи: networking/ipv4.md
+      - Локален Roadmap: networking/roadmap.md
+  - 🐍 Програмиране:
+      - Python записи: programming/python.md
+      - Локален Roadmap: programming/roadmap.md
