@@ -1,10 +1,23 @@
 site_name: AI Lab & 3D Studio
 theme:
   name: material
-  palette:
-    - scheme: slate
-      primary: deep purple
+  palette: 
+    # Светла тема
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Тъмна тема
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
       accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   icon:
     logo: material/robot-outline
     # logo: material/cube-outline # Избираме куб, подходящ за 3D Studio

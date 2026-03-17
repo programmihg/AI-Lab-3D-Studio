@@ -6,17 +6,17 @@ def collect_roadmaps():
     docs_dir = os.path.join(base_dir, 'docs')
     index_file = os.path.join(docs_dir, 'index.md')
 
-    all_entries = []
+    active_entries = []
+    archived_entries = []
     
-    # Речник за автоматични икони
     icons = {
-        "python": "🐍 ",
-        "github": "🐙 ",
-        "git": "🗂️ ",
-        "3d": "📦 ",
-        "blender": "🎨 ",
-        "ai": "🤖 ",
-        "fix": "🛠️ "
+        "python": "🐍",
+        "github": "🐙",
+        "3d": "📦",
+        "ai": "🤖",
+        "модел": "🧠",
+        "интеграция": "🔗",
+        "флашкарт": "🃏"
     }
 
     if not os.path.exists(docs_dir): return
@@ -33,27 +33,51 @@ def collect_roadmaps():
                     for entry in entries:
                         clean_entry = entry.strip()
                         
-                        # Автоматично добавяне на икона пред заглавието
+                        # Добавяне на икона
                         for key, icon in icons.items():
                             if key in clean_entry.lower():
-                                clean_entry = clean_entry.replace('class="milestone">', f'class="milestone">{icon}')
-                                break # Слагаме само първата намерена икона
+                                clean_entry = clean_entry.replace('class="milestone">', f'class="milestone">{icon} ')
+                                break
                         
-                        all_entries.append(clean_entry)
+                        # Групиране: Активни срещу Архив
+                        if "архив" in clean_entry.lower() or "completed" in clean_entry.lower():
+                            archived_entries.append(clean_entry)
+                        else:
+                            active_entries.append(clean_entry)
 
-    all_entries.sort(reverse=True)
+    # Статистика
+    total = len(active_entries) + len(archived_entries)
+    percent = int((len(archived_entries) / total) * 100) if total > 0 else 0
+
+    active_entries.sort(reverse=True)
+    archived_entries.sort(reverse=True)
 
     with open(index_file, 'w', encoding='utf-8') as f:
         f.write("# 🏠 AI Lab & 3D Studio Dashboard\n\n")
-        # Добавяме търсачката в началото
-        f.write('<input type="text" id="roadmap-search" placeholder="🔍 Търси в историята (напр. python, 3d, git)..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #444; background:#252538; color:white; margin-bottom:20px;">\n\n')
-        f.write("## 🗺️ Пътна Карта\n\n")
-        f.write('<div id="roadmap-container">\n\n')
-        for entry in all_entries:
+        
+        # Лента със статистика
+        f.write(f'<div style="background: #252538; padding: 15px; border-radius: 10px; border: 1px solid #444; margin-bottom: 20px; display: flex; justify-content: space-around; align-items: center;">')
+        f.write(f'<span>📊 <b>Общо задачи:</b> {total}</span>')
+        f.write(f'<span>✅ <b>Завършени:</b> {len(archived_entries)}</span>')
+        f.write(f'<span>📈 <b>Прогрес:</b> {percent}%</span>')
+        f.write(f'</div>\n\n')
+
+        f.write('<input type="text" id="roadmap-search" placeholder="🔍 Търси в историята..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #444; background:#252538; color:white; margin-bottom:20px;">\n\n')
+        
+        f.write("## 🚀 Активни Цели\n\n")
+        f.write('<div id="active-container">\n\n')
+        for entry in active_entries:
             f.write(entry + "\n\n")
         f.write('</div>\n\n')
+
+        if archived_entries:
+            f.write("---\n## 📚 Архив (Завършени)\n\n")
+            f.write('<div id="archive-container" style="opacity: 0.7;">\n\n')
+            for entry in archived_entries:
+                f.write(entry + "\n\n")
+            f.write('</div>\n\n')
         
-        # Добавяме JavaScript логиката за филтриране и оцветяване
+        # JS за търсачката
         f.write("""
 <script>
 const searchInput = document.getElementById('roadmap-search');
@@ -67,7 +91,6 @@ searchInput.addEventListener('input', function() {
     });
 });
 
-// Динамично оцветяване
 entries.forEach(entry => {
     const text = entry.innerText.toLowerCase();
     if (text.includes('python')) entry.style.borderLeft = '5px solid #3776ab';
